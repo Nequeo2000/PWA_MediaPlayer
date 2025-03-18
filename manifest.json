@@ -1,0 +1,22 @@
+{
+    "name": "PWA Media Player",
+    "short_name": "PWA Media Player",
+    "icons": [
+        {
+            "src": "./images/icon300.png",
+            "sizes": "300x300",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "./images/icon100.png",
+            "sizes": "100x100",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "start_url": "./index.html",
+    "display": "standalone",
+    "theme_color": "rgb(0,0,0)",
+    "background_color": "rgb(0,0,0)"
+}
