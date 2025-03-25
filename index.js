@@ -1,7 +1,7 @@
 let input = document.getElementById("input");
 let player = null;
 let currentPlayingIndex = 0;
-let defaultCoverImagePath = "/images/icon100.png";
+let defaultCoverImagePath = "./images/icon100.png";
 let fileList = [];
 
 function loadFileElements(){
@@ -74,7 +74,7 @@ function setMediaSession() {
         album: " ",
         artwork: [
             {
-                src: "." + defaultCoverImagePath,
+                src: defaultCoverImagePath,
                 sizes: "100x100",
                 type: "image/png",
             }
