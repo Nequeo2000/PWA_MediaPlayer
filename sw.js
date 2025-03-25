@@ -1,11 +1,6 @@
 const putInCache = async (request, response) => {
-    const cache = await caches.open("audio visualizer");
-    await cache.put(request, response);
-};
-
-const getFromCache = async (request) => {
     const cache = await caches.open("v1");
-    return await cache.match(request);
+    await cache.put(request, response);
 };
 
 const fetchFirst = async (request) => {
@@ -20,7 +15,7 @@ const fetchFirst = async (request) => {
             return response;
         }     
     } catch (error) {
-        const responseFromCache = await getFromCache(request);
+        const responseFromCache = await caches.match(request);
         if (responseFromCache) {
             return responseFromCache;
         }

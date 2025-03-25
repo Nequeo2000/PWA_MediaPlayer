@@ -1,38 +1,27 @@
 let input = document.getElementById("input");
-let settingsDialog = document.getElementById("settings");
-let loadingDialog = document.querySelector("#loading");
-let playerDialog = document.querySelector("#player");
-let mediaList = document.querySelector("#mediaList");
-let storageInfo = document.querySelector("#storageInfo");
-let clearMemoryBtn = document.querySelector("#clear");
-clearMemoryBtn.onclick = async ()=>{
-    loadingDialog.showModal();
-    let entries = await getEntries();
-    for(let entry of entries){
-        await rootDirHandle.removeEntry(entry.name);
-    }
-    window.onload();
-    loadingDialog.close();
-};
-
 let player = null;
-let currentPlayingIndex = -1;
+let currentPlayingIndex = 0;
 let defaultCoverImagePath = "./images/icon100.png";
 let fileList = [];
 
-input.onchange = async (event) => {
-    loadingDialog.showModal();
+function loadFileElements(){
+    let tableBody = document.getElementById("tableBody");
+    tableBody.innerHTML = "";
+    for (let file of fileList) {
+        tableBody.innerHTML += `
+            <div class="media" index="${fileList.indexOf(file)}"
+            onclick="playIndex(${fileList.indexOf(file)});">
+                ${file.name}
+            </div>
+        `;
+    }
+}
+
+input.onchange = (event) => {
     if(!input.files.length)
         return;
-    let files = event.target.files;
-    for (let file of files) {
-        let fileReadStream = await file.stream();
-        let fileHandle = await rootDirHandle.getFileHandle(file.name, { create: true });
-        let fileHandleWriteStream = await fileHandle.createWritable();
-        await fileReadStream.pipeTo(fileHandleWriteStream);
-    }
-    window.onload();
-    loadingDialog.close();
+    fileList = [...input.files];
+    loadFileElements();
 }
 
 function initPlayers() {
@@ -49,22 +38,80 @@ function initPlayers() {
 }
 
 function playIndex(index) {
-    let file = fileList[index];
-    if(file.type.split("/")[0] == "video"
-    && currentPlayingIndex == index ){
-        playerDialog.showModal();
-        return;
-    }
-    
     currentPlayingIndex = index;
+
     if (player) // if already playing, stop playing
         player.pause();
 
     player.currentTime = 0;
-    player.src = URL.createObjectURL(file);
+    player.src = URL.createObjectURL(fileList[index]);
     setMediaSession();
 
     navigator.mediaSession.playAction();
+
+    let titleContainer = document.getElementById("mediaTitleContainer");
+    titleContainer.innerText = fileList[currentPlayingIndex].name;
+}
+
+
+function setMediaSession() {
+    let title = (fileList.length != 0) ? fileList[currentPlayingIndex].name : "";
+
+    // test for media session api
+    if (!("mediaSession" in navigator))
+        return;
+
+    if (navigator.mediaSession.metadata) {
+        // set titel of mediaSession
+        navigator.mediaSession.metadata.title = title;
+
+        return;
+    }
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: title,
+        artist: "PWA MediaPlayer",
+        album: " ",
+        artwork: [
+            {
+                src: defaultCoverImagePath,
+                sizes: "100x100",
+                type: "image/png",
+            }
+        ],
+    });
+
+    navigator.mediaSession.playAction = () => {
+        player.play()
+            .then(() => {
+                setMediaSession();
+            });
+        navigator.mediaSession.playbackState = "playing";
+    };
+    navigator.mediaSession.setActionHandler("play", navigator.mediaSession.playAction);
+
+    navigator.mediaSession.setActionHandler("pause", () => {
+        player.pause();
+        navigator.mediaSession.playbackState = "paused";
+    });
+
+    navigator.mediaSession.setActionHandler("seekto", (details) => {
+        if (details.fastSeek && 'fastSeek' in player) {
+            player.fastSeek(details.seekTime);
+            return;
+        }
+        player.currentTime = details.seekTime;
+    });
+
+    navigator.mediaSession.previousTrackAction = () => {
+        playIndex( (fileList.length + currentPlayingIndex - 1) % fileList.length );
+    };
+    navigator.mediaSession.setActionHandler("previoustrack", navigator.mediaSession.previousTrackAction);
+
+    navigator.mediaSession.nextTrackAction = () => {
+        playIndex( (fileList.length + currentPlayingIndex + 1) % fileList.length );
+    };
+    navigator.mediaSession.setActionHandler("nexttrack", navigator.mediaSession.nextTrackAction);
 }
 
 // window event handlers
@@ -73,31 +120,9 @@ window.onbeforeunload = (e)=>{
     localStorage.setItem("mediaVolume", media.volume);
 };
 
-window.onload = async ()=>{
+window.onload = ()=>{
     initPlayers();
     setMediaSession();
-
-    mediaList.innerHTML = "";
-    // load file system
-    let [directoryHandle, usage, quota] = await initOPFS();
-    rootDirHandle = directoryHandle;
-    // display file system information
-    storageInfo.innerText = `${Math.floor(usage / Math.pow(2, 2 * 10))} MB / ${quota / Math.pow(2, 2 * 10)} MB`;
-
-    // iterate of entries and display them
-    loadingDialog.showModal();
-    
-    let entries = await getEntries();
-    for(let entry of entries){
-        let div = document.createElement("div");
-        div.className = "file";
-        div.onclick = ()=>playIndex(fileList.indexOf(entry));
-        div.innerText = entry.name;
-        mediaList.appendChild(div);
-    }
-    fileList = [...entries];
-
-    loadingDialog.close();
 };
 
 // PWA SETUP
