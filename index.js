@@ -74,7 +74,6 @@ window.onbeforeunload = (e)=>{
 };
 
 window.onload = async ()=>{
-    setTimeout(()=>{alert(1);});
     initPlayers();
     setMediaSession();
 
