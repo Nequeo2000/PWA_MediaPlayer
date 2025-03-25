@@ -4,34 +4,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="index.css">
+
 </head>
 
 <body>
+    <!-- UI ELEMENTS -->
     <div id="optionsInterface">
         <button onclick="input.click();">Import Files</button>
-        <button onclick="let mediaContainer = document.getElementById('mediaContainer'); mediaContainer.style.height = (mediaContainer.style.height != '100%') ? '100%' : '0px'; event.target.innerText = (mediaContainer.style.height != '100%') ? 'Open Player' : 'Close Player';">Open Player</button>
+        <button onclick="settingsDialog.showModal();">Settings</button>
     </div>
-    <div id="mediaContainer" id="mediaContainer">
-        <div id="mediaTitleContainer"></div>
-        <video id="video" src="" playsinline onended='navigator.mediaSession.nextTrackAction();'></video>
-        <div id="mediaControlsContainer">
-            <button onclick="navigator.mediaSession.previousTrackAction()">
-                <img src="images/backward.png">
-            </button>
-            <button onclick="let target = event.target; if(target.tagName == 'IMG'){target=target.parentNode} if(player.paused){navigator.mediaSession.playAction(); target.getElementsByTagName('img')[0].src='./images/pause.png';} else {player.pause(); target.getElementsByTagName('img')[0].src='./images/play.png';}">
-                <img src="images/pause.png">
-            </button>
-            <button onclick="navigator.mediaSession.nextTrackAction()">
-                <img src="images/forward.png">
-            </button>
-        </div>
+    <div id="mediaList">
+
     </div>
-    <div id="tableBody"></div>
-    
     <input id="input" type="file" accept="audio/mp3, audio/*, video/*" multiple hidden>
+    
+    <!-- DIALOG ELEMENTS -->
+    <dialog id="player">
+        <video id="video" playsinline playsinline onended='navigator.mediaSession.nextTrackAction();'></video>
+        <button onclick="playerDialog.close();">Close</button>
+    </dialog>
+    <dialog id="settings">
+        <p id="storageInfo"></p>
+        <button id="clear">Clear Memory</button>
+        <button onclick="settingsDialog.close();">Close</button>
+    </dialog>
+    <dialog id="loading">Loading...</dialog>
+    
+    <!-- SCRIPT ELEMENTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.js"
         integrity="sha512-fCU+rmH3nS/RJaTSl/ylo/PxwWIZwJts3rfxRylSPqGYMJGPLXvPJGOTF+ECb0K5m9rSXbkCNg2PR7WKGWRTVQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="mediaSessionAPI.js"></script>
+    <script src="fileSystemAccessAPI.js"></script>
     <script src="index.js"></script>
 </body>
 
