@@ -26,10 +26,13 @@ input.onchange = async (event) => {
         return;
     let files = event.target.files;
     for (let file of files) {
-        let fileReadStream = await file.stream();
-        let fileHandle = await rootDirHandle.getFileHandle(file.name, { create: true });
-        let fileHandleWriteStream = await fileHandle.createWritable();
-        await fileReadStream.pipeTo(fileHandleWriteStream);
+        //let fileReadStream = await file.stream();
+        //let fileHandle = await rootDirHandle.getFileHandle(file.name, { create: true });
+        //let fileHandleWriteStream = await fileHandle.createWritable();
+        //await fileReadStream.pipeTo(fileHandleWriteStream);
+
+        let arrayBuffer = await readAsArrayBuffer(file);
+        await write_to_file(file.name, arrayBuffer);
     }
     window.onload();
     loadingDialog.close();
