@@ -21,15 +21,18 @@ let defaultCoverImagePath = "./images/icon100.png";
 let fileList = [];
 
 input.onchange = async (event) => {
-    loadingDialog.showModal();
+    //loadingDialog.showModal();
     if(!input.files.length)
         return;
     let files = event.target.files;
+    console.log(files);
     for (let file of files) {
-        //let fileReadStream = await file.stream();
-        //let fileHandle = await rootDirHandle.getFileHandle(file.name, { create: true });
-        //let fileHandleWriteStream = await fileHandle.createWritable();
-        //await fileReadStream.pipeTo(fileHandleWriteStream);
+        /*
+        let fileReadStream = await file.stream();
+        let fileHandle = await rootDirHandle.getFileHandle(file.name, { create: true });
+        let fileHandleWriteStream = await fileHandle.createWritable();
+        await fileReadStream.pipeTo(fileHandleWriteStream);
+        */
 
         let arrayBuffer = await readAsArrayBuffer(file);
         await write_to_file(file.name, arrayBuffer);
@@ -78,7 +81,7 @@ window.onbeforeunload = (e)=>{
 
 window.onload = async ()=>{
     initPlayers();
-    setMediaSession();
+    //setMediaSession();
 
     mediaList.innerHTML = "";
     // load file system

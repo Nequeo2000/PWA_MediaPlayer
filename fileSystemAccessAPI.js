@@ -29,17 +29,35 @@ async function getEntries() {
     }
 }
 
-
-async function write_to_file(filename, content) {
+function write_to_file(filename, content) {
     if(window.Worker){
-        let worker = await new Worker("filewriter.js");
-        await new Promise((resolve, reject)=>{
+        new Promise((resolve, reject)=>{
+            let worker = new Worker("filewriter.js");
             worker.onmessage = (e)=>{
+                if(e.data.debug){
+                    console.log(e.data.debug);
+                    return;
+                }
+                console.log(e.data);
+
                 resolve();
+                console.log("Promise resolved");
+                worker.terminate();
+                console.log("Worker terminated");
             };
-            worker.postMessage([filename, content]);
+
+            worker.onmessageerror = (e)=>{
+                console.log("message error ",  e);
+            };
+
+            worker.onerror = (e)=>{
+                console.log("ERROR");
+
+                worker.terminate();
+            };
+
+            worker.postMessage([filename, "content"]);
         });
-        worker.terminate();
     }
 }
 
