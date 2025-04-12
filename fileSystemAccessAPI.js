@@ -51,7 +51,7 @@ function write_to_file(filename, content) {
             };
 
             worker.onerror = (e)=>{
-                console.log("ERROR");
+                console.log("ERROR", e);
 
                 worker.terminate();
             };
