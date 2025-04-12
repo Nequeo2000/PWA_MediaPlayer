@@ -29,9 +29,9 @@ async function getEntries() {
     }
 }
 
-function write_to_file(filename, content) {
+async function write_to_file(filename, content) {
     if(window.Worker){
-        new Promise((resolve, reject)=>{
+        await new Promise((resolve, reject)=>{
             let worker = new Worker("./filewriter.js");
             worker.onmessage = (e)=>{
                 if(e.data.debug){
