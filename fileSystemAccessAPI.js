@@ -32,7 +32,7 @@ async function getEntries() {
 function write_to_file(filename, content) {
     if(window.Worker){
         new Promise((resolve, reject)=>{
-            let worker = new Worker("filewriter.js");
+            let worker = new Worker("./filewriter.js");
             worker.onmessage = (e)=>{
                 if(e.data.debug){
                     console.log(e.data.debug);
