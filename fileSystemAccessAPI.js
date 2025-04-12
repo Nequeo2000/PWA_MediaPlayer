@@ -56,7 +56,7 @@ function write_to_file(filename, content) {
                 worker.terminate();
             };
 
-            worker.postMessage([filename, "content"]);
+            worker.postMessage([filename, content]);
         });
     }
 }
