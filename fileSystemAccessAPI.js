@@ -29,33 +29,28 @@ async function getEntries() {
     }
 }
 
-async function write_to_file(filename, content) {
-    if(window.Worker){
+async function save_file(file) {
+    let filename = file.name;
+    let fileHandle = await rootDirHandle.getFileHandle(filename, { create: true });
+    if(fileHandle.createWritable){
+        let fileReadStream = await file.stream();
+        let fileHandleWriteStream = await fileHandle.createWritable();
+        await fileReadStream.pipeTo(fileHandleWriteStream);
+    } else {
+        let content = await readAsArrayBuffer(file);
         await new Promise((resolve, reject)=>{
             let worker = new Worker("./filewriter.js");
+            
             worker.onmessage = (e)=>{
-                if(e.data.debug){
-                    console.log(e.data.debug);
-                    return;
-                }
-                console.log(e.data);
-
                 resolve();
-                console.log("Promise resolved");
                 worker.terminate();
-                console.log("Worker terminated");
-            };
-
-            worker.onmessageerror = (e)=>{
-                console.log("message error ",  e);
             };
 
             worker.onerror = (e)=>{
-                console.log("ERROR", e);
-
+                reject();
                 worker.terminate();
             };
-
+    
             worker.postMessage([filename, content]);
         });
     }

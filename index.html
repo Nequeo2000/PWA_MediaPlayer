@@ -8,8 +8,10 @@
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/eruda@3.4.1/eruda.min.js"></script>
-    <script>eruda.init();</script>
+    <!--
+        <script src="https://cdn.jsdelivr.net/npm/eruda@3.4.1/eruda.min.js"></script>
+        <script>eruda.init();</script>
+    -->
     <!-- UI ELEMENTS -->
     <div id="optionsInterface">
         <button onclick="input.click();">Import Files</button>
@@ -18,10 +20,7 @@
     <div id="mediaList">
 
     </div>
-    <!--
-        <input id="input" type="file" accept="audio/mp3, audio/*, video/*" multiple hidden>
-        -->
-        <input id="input" type="file" multiple hidden>
+    <input id="input" type="file" accept="audio/mp3, audio/*, video/*" multiple hidden>
     
     <!-- DIALOG ELEMENTS -->
     <dialog id="player">
