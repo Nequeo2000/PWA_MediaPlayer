@@ -1,5 +1,3 @@
-
-
 const putInCache = async (request, response) => {
     const cache = await caches.open("audio visualizer");
     await cache.put(request, response);
@@ -33,7 +31,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(fetchFirst(event.request));
 });
 
-self.addEventListener("install", () => {
+self.addEventListener("install", (e) => {
     e.waitUntil(
         caches.open("mediaPlayerCache").then((cache) => {
             return cache.addAll(
