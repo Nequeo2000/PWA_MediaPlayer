@@ -5,14 +5,25 @@ let playerDialog = document.querySelector("#player");
 let mediaList = document.querySelector("#mediaList");
 let storageInfo = document.querySelector("#storageInfo");
 let clearMemoryBtn = document.querySelector("#clear");
-clearMemoryBtn.onclick = async ()=>{
-    loadingDialog.showModal();
+clearMemoryBtn.onclick = async () => {
     let entries = await getEntries();
-    for(let entry of entries){
+    let progressElement = loadingDialog.getElementsByTagName("progress")[0];
+    progressElement.value = 0;
+    progressElement.min = 0;
+    progressElement.max = entries.length;
+
+    loadingDialog.showModal();
+    for (let entry of entries) {
         await rootDirHandle.removeEntry(entry.name);
+        progressElement.value++;
     }
+
     window.onload();
     loadingDialog.close();
+
+    // stop playbac and reset media session
+    player.pause();
+    setMediaSession();
 };
 
 let player = null;
@@ -21,13 +32,20 @@ let defaultCoverImagePath = "./images/icon100.png";
 let fileList = [];
 
 input.onchange = async (event) => {
-    loadingDialog.showModal();
-    if(!input.files.length)
+    if (!input.files.length)
         return;
+
+    let progressElement = loadingDialog.getElementsByTagName("progress")[0];
+    progressElement.value = 0;
+    progressElement.min = 0;
+    progressElement.max = input.files.length;
+
+    loadingDialog.showModal();
     let files = event.target.files;
     console.log(files);
     for (let file of files) {
         await save_file(file);
+        progressElement.value++;
     }
     window.onload();
     loadingDialog.close();
@@ -48,12 +66,12 @@ function initPlayers() {
 
 function playIndex(index) {
     let file = fileList[index];
-    if(file.type.split("/")[0] == "video"
-    && currentPlayingIndex == index ){
+    if (file.type.split("/")[0] == "video"
+        && currentPlayingIndex == index) {
         playerDialog.showModal();
         return;
     }
-    
+
     currentPlayingIndex = index;
     if (player) // if already playing, stop playing
         player.pause();
@@ -66,12 +84,12 @@ function playIndex(index) {
 }
 
 // window event handlers
-window.onbeforeunload = (e)=>{
+window.onbeforeunload = (e) => {
     let media = document.getElementById("video");
     localStorage.setItem("mediaVolume", media.volume);
 };
 
-window.onload = async ()=>{
+window.onload = async () => {
     initPlayers();
     //setMediaSession();
 
@@ -84,12 +102,12 @@ window.onload = async ()=>{
 
     // iterate of entries and display them
     loadingDialog.showModal();
-    
+
     let entries = await getEntries();
-    for(let entry of entries){
+    for (let entry of entries) {
         let div = document.createElement("div");
         div.className = "file";
-        div.onclick = ()=>playIndex(fileList.indexOf(entry));
+        div.onclick = () => playIndex(fileList.indexOf(entry));
         div.innerText = entry.name;
         mediaList.appendChild(div);
     }
