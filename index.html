@@ -4,45 +4,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="index.css">
-
 </head>
 
 <body>
-    <!--
-        <script src="https://cdn.jsdelivr.net/npm/eruda@3.4.1/eruda.min.js"></script>
-        <script>eruda.init();</script>
-    -->
     <!-- UI ELEMENTS -->
-    <div id="optionsInterface">
+    <div id="options_container">
         <button onclick="input.click();">Import Files</button>
         <button onclick="settingsDialog.showModal();">Settings</button>
     </div>
-    <div id="mediaList">
+    <div id="file_list"></div>
+    <button id="open_player_button"></button>
+    <input id="input_element" type="file" accept="audio/mp3, audio/*, video/*" multiple hidden>
 
-    </div>
-    <input id="input" type="file" accept="audio/mp3, audio/*, video/*" multiple hidden>
-    
     <!-- DIALOG ELEMENTS -->
-    <dialog id="player">
-        <video id="video" playsinline playsinline onended='navigator.mediaSession.nextTrackAction();'></video>
-        <button onclick="playerDialog.close();">Close</button>
+    <dialog id="player_dialog">
+        <div class="container">
+            <div style="align-content: center;">
+                <video id="video" playsinline playsinline onended='navigator.mediaSession.nextTrackAction();'></video>
+            </div>
+            <div>
+                <div style="display: flex; flex-direction: row;">
+                    <button onclick='navigator.mediaSession.previousTrackAction();'>Backward</button>
+                    <button onclick='navigator.mediaSession.nextTrackAction();'>Forward</button>
+                </div>
+                <input type="range" id="volume_slider" min="0" max="1" step="0.01">
+            </div>
+            <button onclick="playerDialog.close();">Close</button>
+        </div>
     </dialog>
-    <dialog id="settings">
+    <dialog id="settings_dialog">
         <p id="storageInfo"></p>
         <button id="clear">Clear Memory</button>
         <button onclick="settingsDialog.close();">Close</button>
     </dialog>
-    <dialog id="loading">
+    <dialog id="loading_dialog">
         <p>Loading...</p>
         <progress></progress>
     </dialog>
-    
+
     <!-- SCRIPT ELEMENTS -->
+    <!--
+        <script src="https://cdn.jsdelivr.net/npm/eruda@3.4.1/eruda.min.js"></script>
+        <script>eruda.init();</script>
+    -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.js"
         integrity="sha512-fCU+rmH3nS/RJaTSl/ylo/PxwWIZwJts3rfxRylSPqGYMJGPLXvPJGOTF+ECb0K5m9rSXbkCNg2PR7WKGWRTVQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="mediaSessionAPI.js"></script>
-    <script src="fileSystemAccessAPI.js"></script>
     <script src="index.js"></script>
 </body>
 
