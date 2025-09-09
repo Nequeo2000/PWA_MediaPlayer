@@ -79,23 +79,29 @@ function initPlayers() {
 }
 
 function playIndex(index) {
-    let file = fileList[index];
-    if (file.type.split("/")[0] == "video"
-        && currentPlayingIndex == index) {
-        playerDialog.showModal();
-        return;
+    try {
+        let file = fileList[index];
+        if (file.type.split("/")[0] == "video"
+            && currentPlayingIndex == index) {
+            playerDialog.showModal();
+            return;
+        }
+
+        currentPlayingIndex = index;
+        if (player)
+            player.pause();
+        player.currentTime = 0;
+        player.src = URL.createObjectURL(file);
+
+        setMediaSession();
+        open_player_button_btn.innerText = file.name;
+
+        navigator.mediaSession.playAction();
+    } catch (e) {
+        for(let i in e){
+            console.log(i + " : " + e[i]);
+        }
     }
-
-    currentPlayingIndex = index;
-    if (player)
-        player.pause();
-    player.currentTime = 0;
-    player.src = URL.createObjectURL(file);
-
-    setMediaSession();
-    open_player_button_btn.innerText = file.name;
-
-    navigator.mediaSession.playAction();
 }
 
 // window event handlers
@@ -243,7 +249,7 @@ class OPFS {
 
                 worker.onmessage = (e) => {
                     resolve();
-                    console.log(e.data);
+                    console.log(e);
                     //worker.terminate();
                 };
 
