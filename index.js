@@ -244,7 +244,7 @@ class OPFS {
                 worker.onmessage = (e) => {
                     resolve();
                     console.log(e.data);
-                    worker.terminate();
+                    //worker.terminate();
                 };
 
                 worker.onerror = (e) => {
