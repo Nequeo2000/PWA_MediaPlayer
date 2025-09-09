@@ -246,18 +246,18 @@ class OPFS {
             let content = await OPFS.readAsArrayBuffer(file);
             await new Promise((resolve, reject) => {
                 let worker = new Worker("./filewriter.js");
-
                 worker.onmessage = (e) => {
                     resolve();
-                    console.log(e);
-                    //worker.terminate();
+                    console.log(e.data);
+                    if(e.data == "end")
+                        worker.terminate();
                 };
 
                 worker.onerror = (e) => {
                     reject();
-                    for(let i in e){
-                        console.log(i + " : " + e[i]);
-                    }
+                    console.log(e.message);
+                    console.log(e.lineno);
+                    console.log(e.filename);
                     worker.terminate();
                 };
 

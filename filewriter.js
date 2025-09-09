@@ -18,7 +18,7 @@ self.addEventListener("message", async (e)=>{
     //accessHandle.truncate(writeSize);
     accessHandle.close();
     postMessage({debug: "6"});
-    postMessage("");
+    postMessage("end");
     /* 
     */
 });
