@@ -249,7 +249,9 @@ class OPFS {
 
                 worker.onerror = (e) => {
                     reject();
-                    console.log(e);
+                    for(let i in e){
+                        console.log(i + " : " + e[i]);
+                    }
                     worker.terminate();
                 };
 
