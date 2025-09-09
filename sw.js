@@ -15,10 +15,8 @@ const fetchFirst = async (request) => {
 
     try {
         let response = await fetch(request, { signal });
-        if (response.ok) {
-            putInCache(request, response.clone());
-            return response;
-        }
+        putInCache(request, response.clone());
+        return response;
     } catch (error) {
         const responseFromCache = await getFromCache(request);
         if (responseFromCache) {

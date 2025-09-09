@@ -63,7 +63,6 @@ input.onchange = async (event) => {
     loadingDialog.showModal();
     let files = event.target.files;
     window.file = files[0];
-    console.log(files);
     for (let file of files) {
         await OPFS.save_file(file);
         progressElement.value++;

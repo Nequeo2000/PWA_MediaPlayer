@@ -122,7 +122,18 @@ dialog::backdrop {
 /* PLAYER_DIALOG END */
 
 /* SETTINGS_DIALOG START */
-#settings_dialog #storageInfo::before {
+#settings_dialog .container{
+    display: flex;
+    flex-direction: column;
+}
+
+#settings_dialog .container div{
+    display:flex; 
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#settings_dialog .container #storageInfo::before {
     content: "Memory Size : ";
 }
 
