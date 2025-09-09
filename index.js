@@ -237,7 +237,7 @@ class OPFS {
             let fileHandleWriteStream = await fileHandle.createWritable();
             await fileReadStream.pipeTo(fileHandleWriteStream);
         } else {
-            let content = await readAsArrayBuffer(file);
+            let content = await OPFS.readAsArrayBuffer(file);
             await new Promise((resolve, reject) => {
                 let worker = new Worker("./filewriter.js");
 
