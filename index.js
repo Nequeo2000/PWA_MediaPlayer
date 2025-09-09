@@ -249,6 +249,7 @@ class OPFS {
 
                 worker.onerror = (e) => {
                     reject();
+                    console.log(e);
                     worker.terminate();
                 };
 
