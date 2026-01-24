@@ -8,11 +8,14 @@
 /* BASE ELEMENTS START */
 button {
     background-color: var(--default-ui-element-background-color);
+    color: #000;
 }
 
 body {
     max-height: 100%;
     background-color: rgb(50, 50, 50);
+    overflow: hidden;
+    margin: 0px;
 }
 
 dialog {
@@ -25,15 +28,18 @@ dialog::backdrop {
 /* BASE ELEMENTS END */
 
 /* CLASSES START */
-#file_list {
+#file_elements_container {
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(auto-fill, var(--file-element-height));
     gap: 5px;
-    padding: 5px;
-    min-height: 100%;
     
+    height: 100%;
+    padding-top: 5px;
+    padding-bottom: calc( var(--input_element_height) + var(--open_player_button_button_height) );
     margin-top: var(--input_element_height);
+    overflow: auto;
 }
 
 .file {
@@ -78,56 +84,34 @@ dialog::backdrop {
 
 /* PLAYER_DIALOG START */
 #player_dialog {
-    height: 100%;
-    width: 100%;
-}
-
-#player_dialog .container {
     display: grid;
-    grid-template-rows: 75% 1fr var(--input_element_height);
-    
+    grid-template-rows: 7fr 1fr;
     height: 100%;
     width: 100%;
 }
 
-#player_dialog * {
-    width: 100%;
-    margin: 0px;
+#player_dialog:not([open]) {
+    display: none;
 }
 
-#player_dialog button {
-    height: 3em;
-    margin-bottom: 15px;
-}
-
-#player_dialog input[type=range] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 25px;
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-
-#player_dialog input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    background: #000000;
-    cursor: pointer;
+#player_dialog #close_button {
+    position: relative;
+    top: 50%;
 }
 /* PLAYER_DIALOG END */
 
 /* SETTINGS_DIALOG START */
+#settings_dialog {
+
+}
+
 #settings_dialog .container{
     display: flex;
     flex-direction: column;
+    min-height: fit-content;
 }
 
-#settings_dialog .container div{
+#settings_dialog .container div {
     display:flex; 
     flex-direction: row;
     justify-content: space-between;

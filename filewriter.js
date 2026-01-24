@@ -1,24 +1,27 @@
-self.addEventListener("message", async (e)=>{
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+self.addEventListener("message", (e) => __awaiter(void 0, void 0, void 0, function* () {
     //postMessage("WORKER");
-    postMessage({debug: "0"});
     let data = e.data;
     let name = data[0];
     let arrayBuffer = data[1];
-    postMessage({debug: "1"});
-    
-    let rootDirHandle = await navigator.storage.getDirectory();
-    postMessage({debug: "2"});
-    let fileHandle = await rootDirHandle.getFileHandle(name, { create: true });
-    postMessage({debug: "3"});
-    let accessHandle = await fileHandle.createSyncAccessHandle();
-    postMessage({debug: "4"});
-    
-    let writeSize = accessHandle.write(arrayBuffer, {"at": 0});
-    postMessage({debug: "5"});
+    let rootDirHandle = yield navigator.storage.getDirectory();
+    let fileHandle = yield rootDirHandle.getFileHandle(name, { create: true });
+    let accessHandle;
+    if ("createSyncAccessHandle" in fileHandle)
+        accessHandle = yield fileHandle.createSyncAccessHandle();
+    let writeSize;
+    if (accessHandle)
+        writeSize = accessHandle.write(arrayBuffer, { "at": 0 });
     //accessHandle.truncate(writeSize);
     accessHandle.close();
-    postMessage({debug: "6"});
-    postMessage("end");
-    /* 
-    */
-});
+    postMessage("");
+}));
