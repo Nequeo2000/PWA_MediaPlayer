@@ -168,7 +168,7 @@ class MediaPlayerUI extends HTMLElement {
             // Test if fileList is available
             if (fileList) {
                 // Randomize order of content
-                for(let i=0;i<fileList.length;i++){
+                for (let i = 0; i < fileList.length; i++) {
                     const entry = fileList[i];
                     fileList.splice(i, 1);
                     fileList.push(entry);
@@ -209,7 +209,7 @@ class MediaPlayerUI extends HTMLElement {
             var eq = context.createBiquadFilter();
             eq.frequency.value = freq;
             eq.type = "peaking";
-            eq.gain.value = parseFloat(localStorage.getItem("eq_slide_" + freq) as string) || 0;
+            eq.gain.value = parseFloat(localStorage.getItem("eq_slide_" + i) as string) || 0;
             filters.push(eq);
         });
         // Connect filters in series

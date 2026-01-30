@@ -534,7 +534,7 @@ class MediaPlayerUI extends HTMLElement {
             var eq = context.createBiquadFilter();
             eq.frequency.value = freq;
             eq.type = "peaking";
-            eq.gain.value = parseFloat(localStorage.getItem("eq_slide_" + freq)) || 0;
+            eq.gain.value = parseFloat(localStorage.getItem("eq_slide_" + i)) || 0;
             filters.push(eq);
         });
         // Connect filters in series
